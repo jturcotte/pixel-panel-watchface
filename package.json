@@ -1,0 +1,42 @@
+{
+    "author": "jturcotte",
+    "dependencies": {},
+    "keywords": [],
+    "name": "pixel-panel",
+    "pebble": {
+        "capabilities": [
+            "health"
+        ],
+        "displayName": "Pixel Panel",
+        "enableMultiJS": false,
+        "messageKeys": [],
+        "projectType": "native",
+        "resources": {
+            "media": [
+                {
+                    "characterRegex": "[0-9:,A-Za-z ]",
+                    "file": "fonts/visitor1.ttf",
+                    "name": "FONT_VISITOR_BRK_20",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "characterRegex": "[0-9:]",
+                    "file": "fonts/visitor1.ttf",
+                    "name": "FONT_VISITOR_BRK_50",
+                    "targetPlatforms": null,
+                    "type": "font"
+                }
+            ]
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "diorite"
+        ],
+        "uuid": "de5bb10a-e2fc-4410-ae43-2a2bebfb1ec1",
+        "watchapp": {
+            "watchface": true
+        }
+    },
+    "version": "1.0.0"
+}
