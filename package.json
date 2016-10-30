@@ -14,7 +14,7 @@
         "resources": {
             "media": [
                 {
-                    "characterRegex": "[0-9:,A-Za-z ]",
+                    "characterRegex": "[0-9A-Za-z:\\\\.,% ]",
                     "file": "fonts/visitor1.ttf",
                     "name": "FONT_VISITOR_BRK_20",
                     "targetPlatforms": null,

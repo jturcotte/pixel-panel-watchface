@@ -21,6 +21,9 @@ static GFont s_res_font_visitor_brk_50;
 static GFont s_res_font_visitor_brk_20;
 static TextLayer *s_timetextlayer;
 static TextLayer *s_datetextlayer;
+static TextLayer *s_hearttextlayer;
+static TextLayer *s_stepstextlayer;
+static TextLayer *s_batttextlayer;
 static Layer *s_separatorlayer;
 static Layer *s_framelayer;
 static TextLayer *s_titleheart;
@@ -46,7 +49,7 @@ static void initialise_ui(void) {
   layer_add_child(window_get_root_layer(s_window), (Layer *)s_timetextlayer);
   
   // s_datetextlayer
-  s_datetextlayer = text_layer_create(GRect(0, 67, 144, 20));
+  s_datetextlayer = text_layer_create(GRect(0, 67, 144, 22));
   text_layer_set_background_color(s_datetextlayer, GColorClear);
   text_layer_set_text_color(s_datetextlayer, GColorWhite);
   text_layer_set_text(s_datetextlayer, "Tue, Oct 26");
@@ -62,8 +65,37 @@ static void initialise_ui(void) {
   s_framelayer = layer_create(GRect(9, 99, 125, 60));
   layer_add_child(window_get_root_layer(s_window), (Layer *)s_framelayer);
   
+  // s_hearttextlayer
+  s_hearttextlayer = text_layer_create(GRect(71, 96, 60, 22));
+  text_layer_set_background_color(s_hearttextlayer, GColorClear);
+  text_layer_set_text_color(s_hearttextlayer, GColorWhite);
+  text_layer_set_text(s_hearttextlayer, "199");
+  text_layer_set_text_alignment(s_hearttextlayer, GTextAlignmentRight);
+  text_layer_set_overflow_mode(s_hearttextlayer, GTextOverflowModeFill);
+  text_layer_set_font(s_hearttextlayer, s_res_font_visitor_brk_20);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)s_hearttextlayer);
+  
+  // s_stepstextlayer
+  s_stepstextlayer = text_layer_create(GRect(71, 114, 60, 22));
+  text_layer_set_background_color(s_stepstextlayer, GColorClear);
+  text_layer_set_text_color(s_stepstextlayer, GColorWhite);
+  text_layer_set_text(s_stepstextlayer, "9.9k");
+  text_layer_set_text_alignment(s_stepstextlayer, GTextAlignmentRight);
+  text_layer_set_overflow_mode(s_stepstextlayer, GTextOverflowModeFill);
+  text_layer_set_font(s_stepstextlayer, s_res_font_visitor_brk_20);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)s_stepstextlayer);
+  
+  // s_batttextlayer
+  s_batttextlayer = text_layer_create(GRect(71, 132, 60, 22));
+  text_layer_set_background_color(s_batttextlayer, GColorClear);
+  text_layer_set_text_color(s_batttextlayer, GColorWhite);
+  text_layer_set_text_alignment(s_batttextlayer, GTextAlignmentRight);
+  text_layer_set_overflow_mode(s_batttextlayer, GTextOverflowModeFill);
+  text_layer_set_font(s_batttextlayer, s_res_font_visitor_brk_20);
+  layer_add_child(window_get_root_layer(s_window), (Layer *)s_batttextlayer);
+
   // s_titleheart
-  s_titleheart = text_layer_create(GRect(14, 96, 64, 20));
+  s_titleheart = text_layer_create(GRect(14, 96, 64, 22));
   text_layer_set_background_color(s_titleheart, GColorClear);
   text_layer_set_text_color(s_titleheart, GColorWhite);
   text_layer_set_text(s_titleheart, "Heart:");
@@ -71,7 +103,7 @@ static void initialise_ui(void) {
   layer_add_child(window_get_root_layer(s_window), (Layer *)s_titleheart);
   
   // s_titlesteps
-  s_titlesteps = text_layer_create(GRect(14, 114, 64, 20));
+  s_titlesteps = text_layer_create(GRect(14, 114, 64, 22));
   text_layer_set_background_color(s_titlesteps, GColorClear);
   text_layer_set_text_color(s_titlesteps, GColorWhite);
   text_layer_set_text(s_titlesteps, "Steps:");
@@ -79,7 +111,7 @@ static void initialise_ui(void) {
   layer_add_child(window_get_root_layer(s_window), (Layer *)s_titlesteps);
   
   // s_titlebatt
-  s_titlebatt = text_layer_create(GRect(14, 132, 64, 20));
+  s_titlebatt = text_layer_create(GRect(14, 132, 64, 22));
   text_layer_set_background_color(s_titlebatt, GColorClear);
   text_layer_set_text_color(s_titlebatt, GColorWhite);
   text_layer_set_text(s_titlebatt, "Batt:");
@@ -139,4 +171,9 @@ void set_time_text(char *text)
 void set_date_text(char *text)
 {
   text_layer_set_text(s_datetextlayer, text);
+}
+
+void set_battery_text(char *text)
+{
+  text_layer_set_text(s_batttextlayer, text);
 }

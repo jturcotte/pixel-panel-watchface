@@ -15,6 +15,7 @@
 #include <pebble.h>
 #include "src/c/mainwindow.h"
 
+static char s_battery_text[8];
 static char s_time_text[8];
 static char s_date_text[16];
 
@@ -36,14 +37,21 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   update_time();
 }
 
+static void battery_callback(BatteryChargeState state) {
+  snprintf(s_battery_text, sizeof(s_battery_text), "%d%%", state.charge_percent);
+  set_battery_text(s_battery_text);
+}
+
 static void init() {
   show_mainwindow();
 
   // Make sure the time is displayed from the start
   update_time();
+  battery_callback(battery_state_service_peek());
 
   // Register with TickTimerService
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+  battery_state_service_subscribe(battery_callback);
 }
 
 static void deinit() {
