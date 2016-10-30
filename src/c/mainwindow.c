@@ -66,31 +66,26 @@ static void initialise_ui(void) {
   layer_add_child(window_get_root_layer(s_window), (Layer *)s_framelayer);
   
   // s_hearttextlayer
-  s_hearttextlayer = text_layer_create(GRect(71, 96, 60, 22));
+  s_hearttextlayer = text_layer_create(GRect(78, 96, 53, 22));
   text_layer_set_background_color(s_hearttextlayer, GColorClear);
   text_layer_set_text_color(s_hearttextlayer, GColorWhite);
-  text_layer_set_text(s_hearttextlayer, "199");
   text_layer_set_text_alignment(s_hearttextlayer, GTextAlignmentRight);
-  text_layer_set_overflow_mode(s_hearttextlayer, GTextOverflowModeFill);
   text_layer_set_font(s_hearttextlayer, s_res_font_visitor_brk_20);
   layer_add_child(window_get_root_layer(s_window), (Layer *)s_hearttextlayer);
   
   // s_stepstextlayer
-  s_stepstextlayer = text_layer_create(GRect(71, 114, 60, 22));
+  s_stepstextlayer = text_layer_create(GRect(78, 114, 53, 22));
   text_layer_set_background_color(s_stepstextlayer, GColorClear);
   text_layer_set_text_color(s_stepstextlayer, GColorWhite);
-  text_layer_set_text(s_stepstextlayer, "9.9k");
   text_layer_set_text_alignment(s_stepstextlayer, GTextAlignmentRight);
-  text_layer_set_overflow_mode(s_stepstextlayer, GTextOverflowModeFill);
   text_layer_set_font(s_stepstextlayer, s_res_font_visitor_brk_20);
   layer_add_child(window_get_root_layer(s_window), (Layer *)s_stepstextlayer);
   
   // s_batttextlayer
-  s_batttextlayer = text_layer_create(GRect(71, 132, 60, 22));
+  s_batttextlayer = text_layer_create(GRect(78, 132, 53, 22));
   text_layer_set_background_color(s_batttextlayer, GColorClear);
   text_layer_set_text_color(s_batttextlayer, GColorWhite);
   text_layer_set_text_alignment(s_batttextlayer, GTextAlignmentRight);
-  text_layer_set_overflow_mode(s_batttextlayer, GTextOverflowModeFill);
   text_layer_set_font(s_batttextlayer, s_res_font_visitor_brk_20);
   layer_add_child(window_get_root_layer(s_window), (Layer *)s_batttextlayer);
 
@@ -171,6 +166,15 @@ void set_time_text(char *text)
 void set_date_text(char *text)
 {
   text_layer_set_text(s_datetextlayer, text);
+}
+
+void set_heart_text(char *text)
+{
+  text_layer_set_text(s_hearttextlayer, text);
+}
+void set_steps_text(char *text)
+{
+  text_layer_set_text(s_stepstextlayer, text);
 }
 
 void set_battery_text(char *text)

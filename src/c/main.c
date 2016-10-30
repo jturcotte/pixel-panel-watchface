@@ -15,9 +15,11 @@
 #include <pebble.h>
 #include "src/c/mainwindow.h"
 
-static char s_battery_text[8];
 static char s_time_text[8];
 static char s_date_text[16];
+static char s_heart_text[8];
+static char s_steps_text[8];
+static char s_battery_text[8];
 
 static void update_time() {
   // Get a tm structure
@@ -33,25 +35,48 @@ static void update_time() {
   set_date_text(s_date_text);
 }
 
-static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
+static void tick_event_handler(struct tm *tick_time, TimeUnits units_changed) {
   update_time();
 }
 
-static void battery_callback(BatteryChargeState state) {
+static void battery_event_handler(BatteryChargeState state) {
   snprintf(s_battery_text, sizeof(s_battery_text), "%d%%", state.charge_percent);
   set_battery_text(s_battery_text);
+}
+
+static void health_data_event_handler(HealthEventType type, void *context) {
+  if (type == HealthEventHeartRateUpdate) {
+    int bpm = health_service_peek_current_value(HealthMetricHeartRateBPM);
+    snprintf(s_heart_text, sizeof(s_heart_text), "%d", bpm);
+    set_heart_text(s_heart_text);
+  } else if (type == HealthEventMovementUpdate) {
+    int steps = health_service_sum_today(HealthMetricStepCount);
+    if (steps >= 100000) {
+      int kilo = steps / 1000;
+      snprintf(s_steps_text, sizeof(s_steps_text), "%dk", steps / 1000);
+    } else if (steps >= 1000) {
+      int kilo = steps / 1000;
+      snprintf(s_steps_text, sizeof(s_steps_text), "%d.%dk", kilo, (steps - kilo * 1000) / 100);
+    } else {
+      snprintf(s_steps_text, sizeof(s_steps_text), "%d", steps);
+    }
+    set_steps_text(s_steps_text);
+  }
 }
 
 static void init() {
   show_mainwindow();
 
-  // Make sure the time is displayed from the start
+  // Make sure the panel is updated from the start
   update_time();
-  battery_callback(battery_state_service_peek());
+  battery_event_handler(battery_state_service_peek());
+  health_data_event_handler(HealthEventHeartRateUpdate, NULL);
+  health_data_event_handler(HealthEventMovementUpdate, NULL);
 
-  // Register with TickTimerService
-  tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
-  battery_state_service_subscribe(battery_callback);
+  // Register event handlers
+  tick_timer_service_subscribe(MINUTE_UNIT, tick_event_handler);
+  battery_state_service_subscribe(battery_event_handler);
+  health_service_events_subscribe(health_data_event_handler, NULL);
 }
 
 static void deinit() {
