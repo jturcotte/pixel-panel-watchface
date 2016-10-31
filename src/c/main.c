@@ -21,22 +21,22 @@ static char s_heart_text[8];
 static char s_steps_text[8];
 static char s_battery_text[8];
 
-static void update_time() {
-  // Get a tm structure
-  time_t temp = time(NULL); 
-  struct tm *tick_time = localtime(&temp);
-
-  // Write the current hours and minutes into a buffer
-  strftime(s_time_text, sizeof(s_time_text), clock_is_24h_style() ?
-                                          "%H:%M" : "%I:%M", tick_time);
-  strftime(s_date_text, sizeof(s_date_text), "%a, %b %d", tick_time);
-
-  set_time_text(s_time_text);
-  set_date_text(s_date_text);
-}
-
 static void tick_event_handler(struct tm *tick_time, TimeUnits units_changed) {
-  update_time();
+  if (!tick_time) {
+    time_t temp = time(NULL); 
+    tick_time = localtime(&temp);
+  }
+
+  if (units_changed & MINUTE_UNIT) {
+    // Write the current hours and minutes into a buffer
+    strftime(s_time_text, sizeof(s_time_text), clock_is_24h_style() ?
+                                            "%H:%M" : "%I:%M", tick_time);
+    set_time_text(s_time_text);  
+  }
+  if (units_changed & DAY_UNIT) {
+    strftime(s_date_text, sizeof(s_date_text), "%a, %b %d", tick_time);
+    set_date_text(s_date_text);
+  }
 }
 
 static void battery_event_handler(BatteryChargeState state) {
@@ -68,13 +68,13 @@ static void init() {
   show_mainwindow();
 
   // Make sure the panel is updated from the start
-  update_time();
+  tick_event_handler(NULL, MINUTE_UNIT | DAY_UNIT);
   battery_event_handler(battery_state_service_peek());
   health_data_event_handler(HealthEventHeartRateUpdate, NULL);
   health_data_event_handler(HealthEventMovementUpdate, NULL);
 
   // Register event handlers
-  tick_timer_service_subscribe(MINUTE_UNIT, tick_event_handler);
+  tick_timer_service_subscribe(MINUTE_UNIT | DAY_UNIT, tick_event_handler);
   battery_state_service_subscribe(battery_event_handler);
   health_service_events_subscribe(health_data_event_handler, NULL);
 }
