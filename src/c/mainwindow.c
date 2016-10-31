@@ -168,18 +168,18 @@ static void layout() {
   int width = bounds.size.w;
   GSize s = text_layer_get_content_size(s_timetextlayer);
 
+  int hgap_time_date = ASCENT_VISITOR_BRK_50 / 2;
   int extendable_height = bounds.size.h;
-  extendable_height -= ASCENT_VISITOR_BRK_50 + ASCENT_VISITOR_BRK_20 + PANEL_HEIGHT + PANEL_BOTTOM_MARGIN;
-  int hgap_1_2 = extendable_height * 2 / 5;
-  int hgap_2 = extendable_height * 1 / 5;
-  int hgap_3 = extendable_height - hgap_1_2 - hgap_1_2;
+  extendable_height -= hgap_time_date + ASCENT_VISITOR_BRK_50 + ASCENT_VISITOR_BRK_20 + PANEL_HEIGHT + PANEL_BOTTOM_MARGIN;
+  int hgap_1 = extendable_height * 2 / 3;
+  int hgap_2 = extendable_height - hgap_1;
 
-  int time_ascent_offset = hgap_1_2;
-  int date_ascent_offset = time_ascent_offset + ASCENT_VISITOR_BRK_50 + hgap_1_2;
-  int panel_y_offset = date_ascent_offset + ASCENT_VISITOR_BRK_20 + hgap_3;
+  int time_ascent_offset = hgap_1;
+  int date_ascent_offset = time_ascent_offset + ASCENT_VISITOR_BRK_50 + hgap_time_date;
+  int panel_y_offset = date_ascent_offset + ASCENT_VISITOR_BRK_20 + hgap_2;
 
   layer_set_frame((Layer*)s_timetextlayer, GRect(0, time_ascent_offset - ORIGIN_TO_ASCENT_VISITOR_BRK_50, width + CHAR_GAP_VISITOR_BRK_50, HEIGHT_VISITOR_BRK_50));
-  layer_set_frame((Layer*)s_datetextlayer, GRect(0, date_ascent_offset - ORIGIN_TO_ASCENT_VISITOR_BRK_20, width, HEIGHT_VISITOR_BRK_20));
+  layer_set_frame((Layer*)s_datetextlayer, GRect(0, date_ascent_offset - ORIGIN_TO_ASCENT_VISITOR_BRK_20, width + CHAR_GAP_VISITOR_BRK_20, HEIGHT_VISITOR_BRK_20));
   layer_set_frame((Layer*)s_panellayer, GRect(PANEL_SIDES_MARGIN, panel_y_offset, width - PANEL_SIDES_MARGIN * 2, 60));
 
   layout_panel();
