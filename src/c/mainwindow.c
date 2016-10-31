@@ -113,6 +113,9 @@ static void destroy_ui(void) {
   window_destroy(s_window);
   text_layer_destroy(s_timetextlayer);
   text_layer_destroy(s_datetextlayer);
+  text_layer_destroy(s_batttextlayer);
+  text_layer_destroy(s_stepstextlayer);
+  text_layer_destroy(s_hearttextlayer);
   layer_destroy(s_framelayer);
   text_layer_destroy(s_titleheart);
   text_layer_destroy(s_titlesteps);
