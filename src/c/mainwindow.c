@@ -22,10 +22,12 @@ static GFont s_res_font_visitor_brk_20;
 static TextLayer *s_timetextlayer;
 static TextLayer *s_datetextlayer;
 static TextLayer *s_batttextlayer;
+static TextLayer *s_activetimetextlayer;
 static TextLayer *s_stepstextlayer;
 static TextLayer *s_hearttextlayer;
 static Layer *s_panellayer;
 static TextLayer *s_titlebatt;
+static TextLayer *s_titleactivetime;
 static TextLayer *s_titlesteps;
 static TextLayer *s_titleheart;
 
@@ -68,6 +70,14 @@ static void initialise_ui(void) {
   text_layer_set_font(s_batttextlayer, s_res_font_visitor_brk_20);
   layer_add_child(s_panellayer, (Layer *)s_batttextlayer);
   
+  // s_activetimetextlayer
+  s_activetimetextlayer = text_layer_create(GRect(78, 114, 53, 22));
+  text_layer_set_background_color(s_activetimetextlayer, GColorClear);
+  text_layer_set_text_color(s_activetimetextlayer, GColorWhite);
+  text_layer_set_text_alignment(s_activetimetextlayer, GTextAlignmentRight);
+  text_layer_set_font(s_activetimetextlayer, s_res_font_visitor_brk_20);
+  layer_add_child(s_panellayer, (Layer *)s_activetimetextlayer);
+  
   // s_stepstextlayer
   s_stepstextlayer = text_layer_create(GRect(78, 114, 53, 22));
   text_layer_set_background_color(s_stepstextlayer, GColorClear);
@@ -75,7 +85,7 @@ static void initialise_ui(void) {
   text_layer_set_text_alignment(s_stepstextlayer, GTextAlignmentRight);
   text_layer_set_font(s_stepstextlayer, s_res_font_visitor_brk_20);
   layer_add_child(s_panellayer, (Layer *)s_stepstextlayer);
-  
+
   // s_hearttextlayer
   s_hearttextlayer = text_layer_create(GRect(78, 132, 53, 22));
   text_layer_set_background_color(s_hearttextlayer, GColorClear);
@@ -92,6 +102,14 @@ static void initialise_ui(void) {
   text_layer_set_font(s_titlebatt, s_res_font_visitor_brk_20);
   layer_add_child(s_panellayer, (Layer *)s_titlebatt);
 
+  // s_titleactivetime
+  s_titleactivetime = text_layer_create(GRect(14, 114, 64, 22));
+  text_layer_set_background_color(s_titleactivetime, GColorClear);
+  text_layer_set_text_color(s_titleactivetime, GColorWhite);
+  text_layer_set_text(s_titleactivetime, "Active:");
+  text_layer_set_font(s_titleactivetime, s_res_font_visitor_brk_20);
+  layer_add_child(s_panellayer, (Layer *)s_titleactivetime);
+  
   // s_titlesteps
   s_titlesteps = text_layer_create(GRect(14, 114, 64, 22));
   text_layer_set_background_color(s_titlesteps, GColorClear);
@@ -114,10 +132,12 @@ static void destroy_ui(void) {
   text_layer_destroy(s_timetextlayer);
   text_layer_destroy(s_datetextlayer);
   text_layer_destroy(s_batttextlayer);
+  text_layer_destroy(s_activetimetextlayer);
   text_layer_destroy(s_stepstextlayer);
   text_layer_destroy(s_hearttextlayer);
   layer_destroy(s_panellayer);
   text_layer_destroy(s_titleheart);
+  text_layer_destroy(s_titleactivetime);
   text_layer_destroy(s_titlesteps);
   text_layer_destroy(s_titlebatt);
   fonts_unload_custom_font(s_res_font_visitor_brk_50);
@@ -133,8 +153,8 @@ static void destroy_ui(void) {
 #define ORIGIN_TO_ASCENT_VISITOR_BRK_20 (20 - ASCENT_VISITOR_BRK_20)
 #define CHAR_GAP_VISITOR_BRK_50 6
 #define CHAR_GAP_VISITOR_BRK_20 2
-#define PANEL_HEIGHT 60
-#define PANEL_BOTTOM_MARGIN 9
+#define PANEL_HEIGHT 75
+#define PANEL_BOTTOM_MARGIN 5
 #define PANEL_SIDES_MARGIN PANEL_BOTTOM_MARGIN
 #define PANEL_SIDES_PADDING 5
 #define PANEL_TOPBOTTOM_PADDING 7
@@ -147,16 +167,19 @@ static void layout_panel() {
   int right_width = width - hcenter - PANEL_SIDES_PADDING + CHAR_GAP_VISITOR_BRK_20;
 
   int extendable_height = bounds.size.h - PANEL_TOPBOTTOM_PADDING * 2;
-  extendable_height -= ASCENT_VISITOR_BRK_20 * 3;
-  int gap = extendable_height / 2;
+  extendable_height -= ASCENT_VISITOR_BRK_20 * 4;
+  int gap = extendable_height / 3;
   int batt_ascent_offset = PANEL_TOPBOTTOM_PADDING;
-  int steps_ascent_offset = batt_ascent_offset + ASCENT_VISITOR_BRK_20 + gap;
+  int activetime_ascent_offset = batt_ascent_offset + ASCENT_VISITOR_BRK_20 + gap;
+  int steps_ascent_offset = activetime_ascent_offset + ASCENT_VISITOR_BRK_20 + gap;
   int heart_ascent_offset = steps_ascent_offset + ASCENT_VISITOR_BRK_20 + gap;
 
   layer_set_frame((Layer*)s_batttextlayer, GRect(hcenter, batt_ascent_offset - ORIGIN_TO_ASCENT_VISITOR_BRK_20, right_width, HEIGHT_VISITOR_BRK_20));
+  layer_set_frame((Layer*)s_activetimetextlayer, GRect(hcenter, activetime_ascent_offset - ORIGIN_TO_ASCENT_VISITOR_BRK_20, right_width, HEIGHT_VISITOR_BRK_20));
   layer_set_frame((Layer*)s_stepstextlayer, GRect(hcenter, steps_ascent_offset - ORIGIN_TO_ASCENT_VISITOR_BRK_20, right_width, HEIGHT_VISITOR_BRK_20));
   layer_set_frame((Layer*)s_hearttextlayer, GRect(hcenter, heart_ascent_offset - ORIGIN_TO_ASCENT_VISITOR_BRK_20, right_width, HEIGHT_VISITOR_BRK_20));
   layer_set_frame((Layer*)s_titlebatt, GRect(PANEL_SIDES_PADDING, batt_ascent_offset - ORIGIN_TO_ASCENT_VISITOR_BRK_20, hcenter, HEIGHT_VISITOR_BRK_20));
+  layer_set_frame((Layer*)s_titleactivetime, GRect(PANEL_SIDES_PADDING, activetime_ascent_offset - ORIGIN_TO_ASCENT_VISITOR_BRK_20, hcenter, HEIGHT_VISITOR_BRK_20));
   layer_set_frame((Layer*)s_titlesteps, GRect(PANEL_SIDES_PADDING, steps_ascent_offset - ORIGIN_TO_ASCENT_VISITOR_BRK_20, hcenter, HEIGHT_VISITOR_BRK_20));
   layer_set_frame((Layer*)s_titleheart, GRect(PANEL_SIDES_PADDING, heart_ascent_offset - ORIGIN_TO_ASCENT_VISITOR_BRK_20, hcenter, HEIGHT_VISITOR_BRK_20));
 }
@@ -180,7 +203,7 @@ static void layout() {
 
   layer_set_frame((Layer*)s_timetextlayer, GRect(0, time_ascent_offset - ORIGIN_TO_ASCENT_VISITOR_BRK_50, width + CHAR_GAP_VISITOR_BRK_50, HEIGHT_VISITOR_BRK_50));
   layer_set_frame((Layer*)s_datetextlayer, GRect(0, date_ascent_offset - ORIGIN_TO_ASCENT_VISITOR_BRK_20, width + CHAR_GAP_VISITOR_BRK_20, HEIGHT_VISITOR_BRK_20));
-  layer_set_frame((Layer*)s_panellayer, GRect(PANEL_SIDES_MARGIN, panel_y_offset, width - PANEL_SIDES_MARGIN * 2, 60));
+  layer_set_frame((Layer*)s_panellayer, GRect(PANEL_SIDES_MARGIN, panel_y_offset, width - PANEL_SIDES_MARGIN * 2, PANEL_HEIGHT));
 
   layout_panel();
 }
@@ -223,6 +246,11 @@ void set_date_text(char *text)
 void set_battery_text(char *text)
 {
   text_layer_set_text(s_batttextlayer, text);
+}
+
+void set_activetime_text(char *text)
+{
+  text_layer_set_text(s_activetimetextlayer, text);
 }
 
 void set_steps_text(char *text)

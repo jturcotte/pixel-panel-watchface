@@ -18,6 +18,7 @@
 static char s_time_text[8];
 static char s_date_text[16];
 static char s_heart_text[8];
+static char s_activetime_text[8];
 static char s_steps_text[8];
 static char s_battery_text[8];
 
@@ -45,14 +46,25 @@ static void battery_event_handler(BatteryChargeState state) {
 }
 
 static void health_data_event_handler(HealthEventType type, void *context) {
-  if (type == HealthEventHeartRateUpdate) {
+  if (type == HealthEventHeartRateUpdate || type == HealthEventSignificantUpdate) {
     int bpm = health_service_peek_current_value(HealthMetricHeartRateBPM);
     snprintf(s_heart_text, sizeof(s_heart_text), "%d", bpm);
     set_heart_text(s_heart_text);
-  } else if (type == HealthEventMovementUpdate) {
+  }
+  if (type == HealthEventMovementUpdate || type == HealthEventSignificantUpdate) {
+    int seconds = health_service_sum_today(HealthMetricActiveSeconds);
+    int hours = seconds / 3600;
+    int minutes = seconds / 60 - hours * 60;
+    if (hours >= 10)
+      snprintf(s_activetime_text, sizeof(s_activetime_text), "%dh", hours);
+    else if (hours >= 1)
+      snprintf(s_activetime_text, sizeof(s_activetime_text), "%dh%dm", hours, minutes);
+    else
+      snprintf(s_activetime_text, sizeof(s_activetime_text), "%dm", minutes);
+    set_activetime_text(s_activetime_text);
+
     int steps = health_service_sum_today(HealthMetricStepCount);
     if (steps >= 100000) {
-      int kilo = steps / 1000;
       snprintf(s_steps_text, sizeof(s_steps_text), "%dk", steps / 1000);
     } else if (steps >= 1000) {
       int kilo = steps / 1000;
@@ -70,8 +82,7 @@ static void init() {
   // Make sure the panel is updated from the start
   tick_event_handler(NULL, MINUTE_UNIT | DAY_UNIT);
   battery_event_handler(battery_state_service_peek());
-  health_data_event_handler(HealthEventHeartRateUpdate, NULL);
-  health_data_event_handler(HealthEventMovementUpdate, NULL);
+  health_data_event_handler(HealthEventSignificantUpdate, NULL);
 
   // Register event handlers
   tick_timer_service_subscribe(MINUTE_UNIT | DAY_UNIT, tick_event_handler);
