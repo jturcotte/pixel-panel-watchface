@@ -24,7 +24,6 @@ static TextLayer *s_datetextlayer;
 static TextLayer *s_batttextlayer;
 static TextLayer *s_stepstextlayer;
 static TextLayer *s_hearttextlayer;
-static Layer *s_separatorlayer;
 static Layer *s_framelayer;
 static TextLayer *s_titlebatt;
 static TextLayer *s_titlesteps;
@@ -40,7 +39,7 @@ static void initialise_ui(void) {
   s_res_font_visitor_brk_50 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_VISITOR_BRK_50));
   s_res_font_visitor_brk_20 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_VISITOR_BRK_20));
   // s_timetextlayer
-  s_timetextlayer = text_layer_create(GRect(0, -6, 149, 50));
+  s_timetextlayer = text_layer_create(GRect(0, 6, 149, 50));
   text_layer_set_background_color(s_timetextlayer, GColorClear);
   text_layer_set_text_color(s_timetextlayer, GColorWhite);
   text_layer_set_text(s_timetextlayer, "22:56");
@@ -56,10 +55,6 @@ static void initialise_ui(void) {
   text_layer_set_text_alignment(s_datetextlayer, GTextAlignmentCenter);
   text_layer_set_font(s_datetextlayer, s_res_font_visitor_brk_20);
   layer_add_child(window_get_root_layer(s_window), (Layer *)s_datetextlayer);
-  
-  // s_separatorlayer
-  s_separatorlayer = layer_create(GRect(9, 63, 125, 2));
-  layer_add_child(window_get_root_layer(s_window), (Layer *)s_separatorlayer);
   
   // s_framelayer
   s_framelayer = layer_create(GRect(9, 99, 125, 60));
@@ -118,7 +113,6 @@ static void destroy_ui(void) {
   window_destroy(s_window);
   text_layer_destroy(s_timetextlayer);
   text_layer_destroy(s_datetextlayer);
-  layer_destroy(s_separatorlayer);
   layer_destroy(s_framelayer);
   text_layer_destroy(s_titleheart);
   text_layer_destroy(s_titlesteps);
@@ -145,7 +139,6 @@ static void handle_window_unload(Window* window) {
 void show_mainwindow(void) {
   initialise_ui();
 
-  layer_set_update_proc(s_separatorlayer, separatorlayer_update_proc);
   layer_set_update_proc(s_framelayer, framelayer_update_proc);
 
   window_set_window_handlers(s_window, (WindowHandlers) {
