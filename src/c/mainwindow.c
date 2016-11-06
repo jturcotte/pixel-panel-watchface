@@ -15,6 +15,8 @@
 #include <pebble.h>
 #include "mainwindow.h"
 
+#define MAX_PANEL_ENTRIES 4
+
 static char s_time_text[TIME_TEXT_LENGTH];
 static char s_date_text[DATE_TEXT_LENGTH];
 static char s_heart_text[PANEL_TEXT_LENGTH];
@@ -32,11 +34,19 @@ static TextLayer *s_timetextlayer;
 static TextLayer *s_datetextlayer;
 static Layer *s_panellayer;
 
-static TextLayer *s_entrytitlelayers[4];
-static TextLayer *s_entrytextlayers[4];
+static TextLayer *s_entrytitlelayers[MAX_PANEL_ENTRIES];
+static TextLayer *s_entrytextlayers[MAX_PANEL_ENTRIES];
 
 static GColor s_background_color;
 static GColor s_foreground_color;
+
+static int get_entry_count() {
+  int count = 0;
+  for (int i = 0; i < MAX_PANEL_ENTRIES; ++i)
+    if (s_entrytitlelayers[i])
+      ++count;
+  return count;
+}
 
 static void initialise_ui() {
   s_window = window_create();
@@ -125,7 +135,6 @@ static void create_entry(PanelEntry entry, int position)
     text_layer_set_font(textlayer, s_res_font_visitor_brk_20);
     layer_add_child(s_panellayer, text_layer_get_layer(textlayer));
   }
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "Layers: %d %p %p", entry, titlelayer, textlayer);
 
   s_entrytitlelayers[position] = titlelayer;
   s_entrytextlayers[position] = textlayer;
@@ -158,11 +167,10 @@ static void destroy_ui(void) {
 #define ORIGIN_TO_ASCENT_VISITOR_BRK_20 (20 - ASCENT_VISITOR_BRK_20)
 #define CHAR_GAP_VISITOR_BRK_50 6
 #define CHAR_GAP_VISITOR_BRK_20 2
-#define PANEL_HEIGHT 75
-#define PANEL_BOTTOM_MARGIN 5
-#define PANEL_SIDES_MARGIN PANEL_BOTTOM_MARGIN
+#define SCREEN_MARGIN 5
 #define PANEL_SIDES_PADDING 5
 #define PANEL_TOPBOTTOM_PADDING 7
+#define PANEL_ENTRY_SPAN PANEL_TOPBOTTOM_PADDING
 
 
 static void layout_panel() {
@@ -171,26 +179,36 @@ static void layout_panel() {
   int hcenter = width / 2 + 1;
   int right_width = width - hcenter - PANEL_SIDES_PADDING + CHAR_GAP_VISITOR_BRK_20;
 
+  int entry_count = get_entry_count();
   int extendable_height = bounds.size.h - PANEL_TOPBOTTOM_PADDING * 2;
-  extendable_height -= ASCENT_VISITOR_BRK_20 * 4;
-  int gap = extendable_height / 3;
-  int entry_ascent_offsets[4];
+  extendable_height -= ASCENT_VISITOR_BRK_20 * entry_count;
+  int gap = extendable_height / (entry_count - 1);
 
-  entry_ascent_offsets[0] = PANEL_TOPBOTTOM_PADDING;
-  int previous_offset = entry_ascent_offsets[0];
-  for (size_t i = 1; i < 4; ++i)
-    entry_ascent_offsets[i] = previous_offset = previous_offset + ASCENT_VISITOR_BRK_20 + gap;
+  int entry_ascent_offsets[MAX_PANEL_ENTRIES];
+  int next_offset = PANEL_TOPBOTTOM_PADDING;
+  for (size_t i = 0; i < MAX_PANEL_ENTRIES; ++i) {
+    if (s_entrytitlelayers[i]) {
+      entry_ascent_offsets[i] = next_offset;
+      next_offset = next_offset + ASCENT_VISITOR_BRK_20 + gap;
+    }
+  }
 
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "Layers: %p %p %d", s_entrytitlelayers[0] , s_entrytextlayers[0], entry_ascent_offsets[0]);
-
-  layer_set_frame(text_layer_get_layer(s_entrytitlelayers[0]), GRect(PANEL_SIDES_PADDING, entry_ascent_offsets[0] - ORIGIN_TO_ASCENT_VISITOR_BRK_20, hcenter, HEIGHT_VISITOR_BRK_20));
-  layer_set_frame(text_layer_get_layer(s_entrytitlelayers[1]), GRect(PANEL_SIDES_PADDING, entry_ascent_offsets[1] - ORIGIN_TO_ASCENT_VISITOR_BRK_20, hcenter, HEIGHT_VISITOR_BRK_20));
-  layer_set_frame(text_layer_get_layer(s_entrytitlelayers[2]), GRect(PANEL_SIDES_PADDING, entry_ascent_offsets[2] - ORIGIN_TO_ASCENT_VISITOR_BRK_20, hcenter, HEIGHT_VISITOR_BRK_20));
-  layer_set_frame(text_layer_get_layer(s_entrytitlelayers[3]), GRect(PANEL_SIDES_PADDING, entry_ascent_offsets[3] - ORIGIN_TO_ASCENT_VISITOR_BRK_20, hcenter, HEIGHT_VISITOR_BRK_20));
-  layer_set_frame(text_layer_get_layer(s_entrytextlayers[0]), GRect(hcenter, entry_ascent_offsets[0] - ORIGIN_TO_ASCENT_VISITOR_BRK_20, right_width, HEIGHT_VISITOR_BRK_20));
-  layer_set_frame(text_layer_get_layer(s_entrytextlayers[1]), GRect(hcenter, entry_ascent_offsets[1] - ORIGIN_TO_ASCENT_VISITOR_BRK_20, right_width, HEIGHT_VISITOR_BRK_20));
-  layer_set_frame(text_layer_get_layer(s_entrytextlayers[2]), GRect(hcenter, entry_ascent_offsets[2] - ORIGIN_TO_ASCENT_VISITOR_BRK_20, right_width, HEIGHT_VISITOR_BRK_20));
-  layer_set_frame(text_layer_get_layer(s_entrytextlayers[3]), GRect(hcenter, entry_ascent_offsets[3] - ORIGIN_TO_ASCENT_VISITOR_BRK_20, right_width, HEIGHT_VISITOR_BRK_20));
+  if (s_entrytitlelayers[0]) {
+    layer_set_frame(text_layer_get_layer(s_entrytitlelayers[0]), GRect(PANEL_SIDES_PADDING, entry_ascent_offsets[0] - ORIGIN_TO_ASCENT_VISITOR_BRK_20, hcenter, HEIGHT_VISITOR_BRK_20));
+    layer_set_frame(text_layer_get_layer(s_entrytextlayers[0]), GRect(hcenter, entry_ascent_offsets[0] - ORIGIN_TO_ASCENT_VISITOR_BRK_20, right_width, HEIGHT_VISITOR_BRK_20));
+  }
+  if (s_entrytitlelayers[1]) {
+    layer_set_frame(text_layer_get_layer(s_entrytitlelayers[1]), GRect(PANEL_SIDES_PADDING, entry_ascent_offsets[1] - ORIGIN_TO_ASCENT_VISITOR_BRK_20, hcenter, HEIGHT_VISITOR_BRK_20));
+    layer_set_frame(text_layer_get_layer(s_entrytextlayers[1]), GRect(hcenter, entry_ascent_offsets[1] - ORIGIN_TO_ASCENT_VISITOR_BRK_20, right_width, HEIGHT_VISITOR_BRK_20));
+  }
+  if (s_entrytitlelayers[2]) {
+    layer_set_frame(text_layer_get_layer(s_entrytitlelayers[2]), GRect(PANEL_SIDES_PADDING, entry_ascent_offsets[2] - ORIGIN_TO_ASCENT_VISITOR_BRK_20, hcenter, HEIGHT_VISITOR_BRK_20));
+    layer_set_frame(text_layer_get_layer(s_entrytextlayers[2]), GRect(hcenter, entry_ascent_offsets[2] - ORIGIN_TO_ASCENT_VISITOR_BRK_20, right_width, HEIGHT_VISITOR_BRK_20));
+  }
+  if (s_entrytitlelayers[3]) {
+    layer_set_frame(text_layer_get_layer(s_entrytitlelayers[3]), GRect(PANEL_SIDES_PADDING, entry_ascent_offsets[3] - ORIGIN_TO_ASCENT_VISITOR_BRK_20, hcenter, HEIGHT_VISITOR_BRK_20));
+    layer_set_frame(text_layer_get_layer(s_entrytextlayers[3]), GRect(hcenter, entry_ascent_offsets[3] - ORIGIN_TO_ASCENT_VISITOR_BRK_20, right_width, HEIGHT_VISITOR_BRK_20));
+  }
 }
 
 static void layout() {
@@ -198,19 +216,21 @@ static void layout() {
   GRect bounds = layer_get_bounds(root);
   int width = bounds.size.w;
 
+  int entry_count = get_entry_count();
+  int panel_height = entry_count ? (entry_count * ASCENT_VISITOR_BRK_20 + (entry_count - 1) * PANEL_ENTRY_SPAN + 2 * PANEL_TOPBOTTOM_PADDING) : 0;
   int hgap_time_date = ASCENT_VISITOR_BRK_50 / 2;
   int extendable_height = bounds.size.h;
-  extendable_height -= hgap_time_date + ASCENT_VISITOR_BRK_50 + ASCENT_VISITOR_BRK_20 + PANEL_HEIGHT + PANEL_BOTTOM_MARGIN;
-  int hgap_1 = extendable_height * 2 / 3;
+  extendable_height -= hgap_time_date + ASCENT_VISITOR_BRK_50 + ASCENT_VISITOR_BRK_20 + panel_height + 2 * SCREEN_MARGIN;
+  int hgap_1 = extendable_height / 2;
   int hgap_2 = extendable_height - hgap_1;
 
-  int time_ascent_offset = hgap_1;
+  int time_ascent_offset = SCREEN_MARGIN + hgap_1;
   int date_ascent_offset = time_ascent_offset + ASCENT_VISITOR_BRK_50 + hgap_time_date;
   int panel_y_offset = date_ascent_offset + ASCENT_VISITOR_BRK_20 + hgap_2;
 
   layer_set_frame(text_layer_get_layer(s_timetextlayer), GRect(0, time_ascent_offset - ORIGIN_TO_ASCENT_VISITOR_BRK_50, width + CHAR_GAP_VISITOR_BRK_50, HEIGHT_VISITOR_BRK_50));
   layer_set_frame(text_layer_get_layer(s_datetextlayer), GRect(0, date_ascent_offset - ORIGIN_TO_ASCENT_VISITOR_BRK_20, width + CHAR_GAP_VISITOR_BRK_20, HEIGHT_VISITOR_BRK_20));
-  layer_set_frame((Layer*)s_panellayer, GRect(PANEL_SIDES_MARGIN, panel_y_offset, width - PANEL_SIDES_MARGIN * 2, PANEL_HEIGHT));
+  layer_set_frame((Layer*)s_panellayer, GRect(SCREEN_MARGIN, panel_y_offset, width - SCREEN_MARGIN * 2, panel_height));
 
   layout_panel();
 }

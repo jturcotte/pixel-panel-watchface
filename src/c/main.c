@@ -105,7 +105,6 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
   Tuple *entry4_t = dict_find(iter, MESSAGE_KEY_Entry4);
   if (entry4_t)
     settings.Entry4 = tuple_to_panelentry(entry4_t);
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "Config: %d %s", settings.Entry1, entry1_t->value->cstring);
 
   save_settings();
   hide_mainwindow();
