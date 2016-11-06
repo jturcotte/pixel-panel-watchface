@@ -14,17 +14,17 @@
 
 #define TIME_TEXT_LENGTH 8
 #define DATE_TEXT_LENGTH 16
-#define BATTERY_TEXT_LENGTH 8
-#define ACTIVETIME_TEXT_LENGTH 8
-#define STEPS_TEXT_LENGTH 8
-#define HEART_TEXT_LENGTH 8
+#define PANEL_TEXT_LENGTH 8
 
 typedef enum {
     PanelEntryNone,
     PanelEntryBattery,
     PanelEntryActiveTime,
     PanelEntrySteps,
-    PanelEntryHeart
+    PanelEntryDistance,
+    PanelEntrySleep,
+    PanelEntryCalories,
+    PanelEntryHeart,
 } PanelEntry;
 
 typedef struct ClaySettings {
@@ -44,4 +44,7 @@ char *get_date_text();
 char *get_battery_text();
 char *get_activetime_text();
 char *get_steps_text();
+char *get_distance_text();
+char *get_sleep_text();
+char *get_calories_text();
 char *get_heart_text();

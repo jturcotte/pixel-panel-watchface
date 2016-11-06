@@ -17,10 +17,13 @@
 
 static char s_time_text[TIME_TEXT_LENGTH];
 static char s_date_text[DATE_TEXT_LENGTH];
-static char s_heart_text[BATTERY_TEXT_LENGTH];
-static char s_activetime_text[ACTIVETIME_TEXT_LENGTH];
-static char s_steps_text[STEPS_TEXT_LENGTH];
-static char s_battery_text[HEART_TEXT_LENGTH];
+static char s_heart_text[PANEL_TEXT_LENGTH];
+static char s_activetime_text[PANEL_TEXT_LENGTH];
+static char s_steps_text[PANEL_TEXT_LENGTH];
+static char s_distance_text[PANEL_TEXT_LENGTH];
+static char s_sleep_text[PANEL_TEXT_LENGTH];
+static char s_calories_text[PANEL_TEXT_LENGTH];
+static char s_battery_text[PANEL_TEXT_LENGTH];
 
 static Window *s_window;
 static GFont s_res_font_visitor_brk_50;
@@ -83,6 +86,18 @@ static void create_entry(PanelEntry entry, int position)
     case PanelEntrySteps:
       title = "Steps:";
       text = s_steps_text;
+      break;
+    case PanelEntryDistance:
+      title = "Dist:";
+      text = s_distance_text;
+      break;
+    case PanelEntrySleep:
+      title = "Sleep:";
+      text = s_sleep_text;
+      break;
+    case PanelEntryCalories:
+      title = "Cal:";
+      text = s_calories_text;
       break;
     case PanelEntryHeart:
       title = "Heart:";
@@ -236,32 +251,38 @@ void mainwindow_mark_dirty()
   layer_mark_dirty(window_get_root_layer(s_window));
 }
 
-char *get_time_text()
-{
+char *get_time_text() {
   return s_time_text;
 }
 
-char *get_date_text()
-{
+char *get_date_text() {
   return s_date_text;
 }
 
-char *get_battery_text()
-{
+char *get_battery_text() {
   return s_battery_text;
 }
 
-char *get_activetime_text()
-{
+char *get_activetime_text() {
   return s_activetime_text;
 }
 
-char *get_steps_text()
-{
+char *get_steps_text() {
   return s_steps_text;
 }
 
-char *get_heart_text()
-{
+char *get_distance_text() {
+  return s_distance_text;
+}
+
+char *get_sleep_text() {
+  return s_sleep_text;
+}
+
+char *get_calories_text() {
+  return s_calories_text;
+}
+
+char *get_heart_text() {
   return s_heart_text;
 }

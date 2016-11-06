@@ -19,7 +19,7 @@
 
 ClaySettings settings;
 
-PanelEntry tuple_to_panelentry(Tuple *tuple) {
+static PanelEntry tuple_to_panelentry(Tuple *tuple) {
   if (tuple->type != TUPLE_CSTRING)
     return PanelEntryNone;
 
@@ -30,9 +30,37 @@ PanelEntry tuple_to_panelentry(Tuple *tuple) {
     return PanelEntryActiveTime;
   if (!strncmp("Steps", str, tuple->length))
     return PanelEntrySteps;
+  if (!strncmp("Distance", str, tuple->length))
+    return PanelEntryDistance;
+  if (!strncmp("Sleep", str, tuple->length))
+    return PanelEntrySleep;
+  if (!strncmp("Calories", str, tuple->length))
+    return PanelEntryCalories;
   if (!strncmp("Heart", str, tuple->length))
     return PanelEntryHeart;
   return PanelEntryNone;
+}
+
+static void convert_count_to_string(int count, char *output, size_t length) {
+  if (count >= 100000) {
+    snprintf(output, length, "%dk", count / 1000);
+  } else if (count >= 1000) {
+    int kilo = count / 1000;
+    snprintf(output, length, "%d.%dk", kilo, (count - kilo * 1000) / 100);
+  } else {
+    snprintf(output, length, "%d", count);
+  }
+}
+
+static void convert_seconds_to_string(int seconds, char *output, size_t length) {
+  int hours = seconds / 3600;
+  int minutes = seconds / 60 - hours * 60;
+  if (hours >= 10)
+    snprintf(output, length, "%dh", hours);
+  else if (hours >= 1)
+    snprintf(output, length, "%d:%d", hours, minutes);
+  else
+    snprintf(output, length, "%dm", minutes);
 }
 
 static void default_settings() {
@@ -105,7 +133,7 @@ static void tick_event_handler(struct tm *tick_time, TimeUnits units_changed) {
 
 static void battery_event_handler(BatteryChargeState state) {
   char *battery_text = get_battery_text();
-  snprintf(battery_text, BATTERY_TEXT_LENGTH, "%d%%", state.charge_percent);
+  snprintf(battery_text, PANEL_TEXT_LENGTH, "%d%%", state.charge_percent);
   mainwindow_mark_dirty();
 }
 
@@ -113,31 +141,41 @@ static void health_data_event_handler(HealthEventType type, void *context) {
   if (type == HealthEventHeartRateUpdate || type == HealthEventSignificantUpdate) {
     int bpm = health_service_peek_current_value(HealthMetricHeartRateBPM);
     char *heart_text = get_heart_text();
-    snprintf(heart_text, HEART_TEXT_LENGTH, "%d", bpm);
+    snprintf(heart_text, PANEL_TEXT_LENGTH, "%d", bpm);
     mainwindow_mark_dirty();
   }
+
   if (type == HealthEventMovementUpdate || type == HealthEventSignificantUpdate) {
     int seconds = health_service_sum_today(HealthMetricActiveSeconds);
-    int hours = seconds / 3600;
-    int minutes = seconds / 60 - hours * 60;
     char *activetime_text = get_activetime_text();
-    if (hours >= 10)
-      snprintf(activetime_text, ACTIVETIME_TEXT_LENGTH, "%dh", hours);
-    else if (hours >= 1)
-      snprintf(activetime_text, ACTIVETIME_TEXT_LENGTH, "%dh%dm", hours, minutes);
-    else
-      snprintf(activetime_text, ACTIVETIME_TEXT_LENGTH, "%dm", minutes);
+    convert_seconds_to_string(seconds, activetime_text, PANEL_TEXT_LENGTH);
 
     int steps = health_service_sum_today(HealthMetricStepCount);
     char *steps_text = get_steps_text();
-    if (steps >= 100000) {
-      snprintf(steps_text, STEPS_TEXT_LENGTH, "%dk", steps / 1000);
-    } else if (steps >= 1000) {
-      int kilo = steps / 1000;
-      snprintf(steps_text, STEPS_TEXT_LENGTH, "%d.%dk", kilo, (steps - kilo * 1000) / 100);
+    convert_count_to_string(steps, steps_text, PANEL_TEXT_LENGTH);
+
+    int calories = health_service_sum_today(HealthMetricActiveKCalories)
+      + health_service_sum_today(HealthMetricRestingKCalories);
+    char *calories_text = get_calories_text();
+    convert_count_to_string(calories, calories_text, PANEL_TEXT_LENGTH);
+
+    int meters = health_service_sum_today(HealthMetricWalkedDistanceMeters);
+    char *distance_text = get_distance_text();
+    if (meters >= 100000) {
+      snprintf(distance_text, PANEL_TEXT_LENGTH, "%dkm", meters / 1000);
+    } else if (meters >= 1000) {
+      int kilo = meters / 1000;
+      snprintf(distance_text, PANEL_TEXT_LENGTH, "%d.%dkm", kilo, (meters - kilo * 1000) / 100);
     } else {
-      snprintf(steps_text, STEPS_TEXT_LENGTH, "%d", steps);
+      snprintf(distance_text, PANEL_TEXT_LENGTH, "%d", meters);
     }
+    mainwindow_mark_dirty();
+  }
+
+  if (type == HealthEventSleepUpdate || type == HealthEventSignificantUpdate) {
+    int seconds = health_service_sum_today(HealthMetricSleepSeconds);
+    char *sleep_text = get_sleep_text();
+    convert_seconds_to_string(seconds, sleep_text, PANEL_TEXT_LENGTH);
     mainwindow_mark_dirty();
   }
 }

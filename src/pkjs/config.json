@@ -1,11 +1,7 @@
 [
   {
     "type": "heading",
-    "defaultValue": "App Configuration"
-  },
-  {
-    "type": "text",
-    "defaultValue": "Here is some introductory text."
+    "defaultValue": "Pixel Panel Configuration"
   },
   {
     "type": "section",
@@ -20,21 +16,33 @@
         "defaultValue": "Battery",
         "label": "First entry",
         "options": [
-          { 
-            "label": "", 
-            "value": "" 
+          {
+            "label": "",
+            "value": ""
           },
-          { 
+          {
             "label": "Battery",
-            "value": "Battery" 
+            "value": "Battery"
           },
           { 
             "label": "Active time",
-            "value": "ActiveTime" 
+            "value": "ActiveTime"
           },
           { 
             "label": "Step count",
-            "value": "Steps" 
+            "value": "Steps"
+          },
+          { 
+            "label": "Distance (km)",
+            "value": "Distance"
+          },
+          { 
+            "label": "Sleep",
+            "value": "Sleep"
+          },
+          { 
+            "label": "Calories",
+            "value": "Calories"
           },
           { 
             "label": "Heart rate (BPM)",
@@ -48,21 +56,33 @@
         "defaultValue": "ActiveTime",
         "label": "Second entry",
         "options": [
-          { 
-            "label": "", 
-            "value": "" 
+          {
+            "label": "",
+            "value": ""
           },
-          { 
+          {
             "label": "Battery",
-            "value": "Battery" 
+            "value": "Battery"
           },
           { 
             "label": "Active time",
-            "value": "ActiveTime" 
+            "value": "ActiveTime"
           },
           { 
             "label": "Step count",
-            "value": "Steps" 
+            "value": "Steps"
+          },
+          { 
+            "label": "Distance (km)",
+            "value": "Distance"
+          },
+          { 
+            "label": "Sleep",
+            "value": "Sleep"
+          },
+          { 
+            "label": "Calories",
+            "value": "Calories"
           },
           { 
             "label": "Heart rate (BPM)",
@@ -76,21 +96,33 @@
         "defaultValue": "Steps",
         "label": "Third entry",
         "options": [
-          { 
-            "label": "", 
-            "value": "" 
+          {
+            "label": "",
+            "value": ""
           },
-          { 
+          {
             "label": "Battery",
-            "value": "Battery" 
+            "value": "Battery"
           },
           { 
             "label": "Active time",
-            "value": "ActiveTime" 
+            "value": "ActiveTime"
           },
           { 
             "label": "Step count",
-            "value": "Steps" 
+            "value": "Steps"
+          },
+          { 
+            "label": "Distance (km)",
+            "value": "Distance"
+          },
+          { 
+            "label": "Sleep",
+            "value": "Sleep"
+          },
+          { 
+            "label": "Calories",
+            "value": "Calories"
           },
           { 
             "label": "Heart rate (BPM)",
@@ -104,21 +136,33 @@
         "defaultValue": "Heart",
         "label": "Fourth entry",
         "options": [
-          { 
-            "label": "", 
-            "value": "" 
+          {
+            "label": "",
+            "value": ""
           },
-          { 
+          {
             "label": "Battery",
-            "value": "Battery" 
+            "value": "Battery"
           },
           { 
             "label": "Active time",
-            "value": "ActiveTime" 
+            "value": "ActiveTime"
           },
           { 
             "label": "Step count",
-            "value": "Steps" 
+            "value": "Steps"
+          },
+          { 
+            "label": "Distance (km)",
+            "value": "Distance"
+          },
+          { 
+            "label": "Sleep",
+            "value": "Sleep"
+          },
+          { 
+            "label": "Calories",
+            "value": "Calories"
           },
           { 
             "label": "Heart rate (BPM)",
