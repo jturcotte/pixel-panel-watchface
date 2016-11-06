@@ -40,6 +40,8 @@ static void default_settings() {
   settings.Entry2 = PanelEntryActiveTime;
   settings.Entry3 = PanelEntrySteps;
   settings.Entry4 = PanelEntryHeart;
+  settings.BackgroundColor = GColorBlack;
+  settings.ForegroundColor = GColorWhite;
 }
 
 static void load_settings() {
@@ -52,17 +54,13 @@ static void save_settings() {
 }
 
 static void inbox_received_handler(DictionaryIterator *iter, void *context) {
-  // Background Color
-  // Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_BackgroundColor);
-  // if (bg_color_t) {
-  //   settings.BackgroundColor = GColorFromHEX(bg_color_t->value->int32);
-  // }
+  Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_BackgroundColor);
+  if (bg_color_t)
+    settings.BackgroundColor = GColorFromHEX(bg_color_t->value->int32);
 
-  // // Foreground Color
-  // Tuple *fg_color_t = dict_find(iter, MESSAGE_KEY_ForegroundColor);
-  // if (fg_color_t) {
-  //   settings.ForegroundColor = GColorFromHEX(fg_color_t->value->int32);
-  // }
+  Tuple *fg_color_t = dict_find(iter, MESSAGE_KEY_ForegroundColor);
+  if (fg_color_t)
+    settings.ForegroundColor = GColorFromHEX(fg_color_t->value->int32);
 
   Tuple *entry1_t = dict_find(iter, MESSAGE_KEY_Entry1);
   if (entry1_t)

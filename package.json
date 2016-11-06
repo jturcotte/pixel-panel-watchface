@@ -41,6 +41,7 @@
     },
     "sdkVersion": "3",
     "targetPlatforms": [
+      "basalt",
       "diorite",
       "emery"
     ],

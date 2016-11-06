@@ -32,9 +32,12 @@ static Layer *s_panellayer;
 static TextLayer *s_entrytitlelayers[4];
 static TextLayer *s_entrytextlayers[4];
 
-static void initialise_ui(void) {
+static GColor s_background_color;
+static GColor s_foreground_color;
+
+static void initialise_ui() {
   s_window = window_create();
-  window_set_background_color(s_window, GColorBlack);
+  window_set_background_color(s_window, s_background_color);
   #ifndef PBL_SDK_3
     window_set_fullscreen(s_window, 1);
   #endif
@@ -44,7 +47,7 @@ static void initialise_ui(void) {
   // s_timetextlayer
   s_timetextlayer = text_layer_create(GRect(0, 6, 149, 80));
   text_layer_set_background_color(s_timetextlayer, GColorClear);
-  text_layer_set_text_color(s_timetextlayer, GColorWhite);
+  text_layer_set_text_color(s_timetextlayer, s_foreground_color);
   text_layer_set_text(s_timetextlayer, s_time_text);
   text_layer_set_text_alignment(s_timetextlayer, GTextAlignmentCenter);
   text_layer_set_font(s_timetextlayer, s_res_font_visitor_brk_50);
@@ -53,7 +56,7 @@ static void initialise_ui(void) {
   // s_datetextlayer
   s_datetextlayer = text_layer_create(GRect(0, 67, 144, 22));
   text_layer_set_background_color(s_datetextlayer, GColorClear);
-  text_layer_set_text_color(s_datetextlayer, GColorWhite);
+  text_layer_set_text_color(s_datetextlayer, s_foreground_color);
   text_layer_set_text(s_datetextlayer, s_date_text);
   text_layer_set_text_alignment(s_datetextlayer, GTextAlignmentCenter);
   text_layer_set_font(s_datetextlayer, s_res_font_visitor_brk_20);
@@ -94,14 +97,14 @@ static void create_entry(PanelEntry entry, int position)
   if (title) {
     titlelayer = text_layer_create(GRectZero);
     text_layer_set_background_color(titlelayer, GColorClear);
-    text_layer_set_text_color(titlelayer, GColorWhite);
+    text_layer_set_text_color(titlelayer, s_foreground_color);
     text_layer_set_text(titlelayer, title);
     text_layer_set_font(titlelayer, s_res_font_visitor_brk_20);
     layer_add_child(s_panellayer, text_layer_get_layer(titlelayer));
 
     textlayer = text_layer_create(GRectZero);
     text_layer_set_background_color(textlayer, GColorClear);
-    text_layer_set_text_color(textlayer, GColorWhite);
+    text_layer_set_text_color(textlayer, s_foreground_color);
     text_layer_set_text(textlayer, text);
     text_layer_set_text_alignment(textlayer, GTextAlignmentRight);
     text_layer_set_font(textlayer, s_res_font_visitor_brk_20);
@@ -198,7 +201,7 @@ static void layout() {
 }
 
 static void framelayer_update_proc(Layer *layer, GContext *ctx) {
-  graphics_context_set_stroke_color(ctx, GColorWhite);
+  graphics_context_set_stroke_color(ctx, s_foreground_color);
   graphics_draw_rect(ctx, layer_get_bounds(layer));
 }
 
@@ -207,6 +210,8 @@ static void handle_window_unload(Window* window) {
 }
 
 void show_mainwindow(ClaySettings *settings) {
+  s_background_color = settings->BackgroundColor;
+  s_foreground_color = settings->ForegroundColor;
   initialise_ui();
   create_entry(settings->Entry1, 0);
   create_entry(settings->Entry2, 1);

@@ -32,6 +32,8 @@ typedef struct ClaySettings {
   PanelEntry Entry2;
   PanelEntry Entry3;
   PanelEntry Entry4;
+  GColor BackgroundColor;
+  GColor ForegroundColor;
 } __attribute__((__packed__)) ClaySettings;
 
 void show_mainwindow(ClaySettings *settings);
