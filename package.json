@@ -27,14 +27,28 @@
           "characterRegex": "[0-9A-Za-z:\\\\.,% ]",
           "file": "fonts/visitor1.ttf",
           "name": "FONT_VISITOR_BRK_20",
-          "targetPlatforms": null,
+          "targetPlatforms": ["basalt", "diorite"],
           "type": "font"
         },
         {
           "characterRegex": "[0-9:]",
           "file": "fonts/visitor1.ttf",
           "name": "FONT_VISITOR_BRK_50",
-          "targetPlatforms": null,
+          "targetPlatforms": ["basalt", "diorite"],
+          "type": "font"
+        },
+        {
+          "characterRegex": "[0-9A-Za-z:\\\\.,% ]",
+          "file": "fonts/visitor1.ttf",
+          "name": "FONT_VISITOR_BRK_30",
+          "targetPlatforms": ["emery"],
+          "type": "font"
+        },
+        {
+          "characterRegex": "[0-9:]",
+          "file": "fonts/visitor1.ttf",
+          "name": "FONT_VISITOR_BRK_70",
+          "targetPlatforms": ["emery"],
           "type": "font"
         }
       ]
