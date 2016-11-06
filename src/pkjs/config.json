@@ -1,0 +1,156 @@
+[
+  {
+    "type": "heading",
+    "defaultValue": "App Configuration"
+  },
+  {
+    "type": "text",
+    "defaultValue": "Here is some introductory text."
+  },
+  {
+    "type": "section",
+    "items": [
+      {
+        "type": "heading",
+        "defaultValue": "Panel entries"
+      },
+      {
+        "type": "select",
+        "messageKey": "Entry1",
+        "defaultValue": "Battery",
+        "label": "First entry",
+        "options": [
+          { 
+            "label": "", 
+            "value": "" 
+          },
+          { 
+            "label": "Battery",
+            "value": "Battery" 
+          },
+          { 
+            "label": "Active time",
+            "value": "ActiveTime" 
+          },
+          { 
+            "label": "Step count",
+            "value": "Steps" 
+          },
+          { 
+            "label": "Heart rate (BPM)",
+            "value": "Heart" 
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "messageKey": "Entry2",
+        "defaultValue": "ActiveTime",
+        "label": "Second entry",
+        "options": [
+          { 
+            "label": "", 
+            "value": "" 
+          },
+          { 
+            "label": "Battery",
+            "value": "Battery" 
+          },
+          { 
+            "label": "Active time",
+            "value": "ActiveTime" 
+          },
+          { 
+            "label": "Step count",
+            "value": "Steps" 
+          },
+          { 
+            "label": "Heart rate (BPM)",
+            "value": "Heart" 
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "messageKey": "Entry3",
+        "defaultValue": "Steps",
+        "label": "Third entry",
+        "options": [
+          { 
+            "label": "", 
+            "value": "" 
+          },
+          { 
+            "label": "Battery",
+            "value": "Battery" 
+          },
+          { 
+            "label": "Active time",
+            "value": "ActiveTime" 
+          },
+          { 
+            "label": "Step count",
+            "value": "Steps" 
+          },
+          { 
+            "label": "Heart rate (BPM)",
+            "value": "Heart" 
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "messageKey": "Entry4",
+        "defaultValue": "Heart",
+        "label": "Fourth entry",
+        "options": [
+          { 
+            "label": "", 
+            "value": "" 
+          },
+          { 
+            "label": "Battery",
+            "value": "Battery" 
+          },
+          { 
+            "label": "Active time",
+            "value": "ActiveTime" 
+          },
+          { 
+            "label": "Step count",
+            "value": "Steps" 
+          },
+          { 
+            "label": "Heart rate (BPM)",
+            "value": "Heart" 
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "section",
+    "items": [
+      {
+        "type": "heading",
+        "defaultValue": "Colors"
+      },
+      {
+        "type": "color",
+        "messageKey": "BackgroundColor",
+        "defaultValue": "0x000000",
+        "label": "Background Color"
+      },
+      {
+        "type": "color",
+        "messageKey": "ForegroundColor",
+        "defaultValue": "0xFFFFFF",
+        "label": "Foreground Color"
+      }
+    ]
+  },
+  {
+    "type": "submit",
+    "defaultValue": "Save Settings"
+  }
+]

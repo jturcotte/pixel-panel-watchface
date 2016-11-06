@@ -12,11 +12,34 @@
   GNU General Public License for more details.
 */
 
-void show_mainwindow(void);
+#define TIME_TEXT_LENGTH 8
+#define DATE_TEXT_LENGTH 16
+#define BATTERY_TEXT_LENGTH 8
+#define ACTIVETIME_TEXT_LENGTH 8
+#define STEPS_TEXT_LENGTH 8
+#define HEART_TEXT_LENGTH 8
+
+typedef enum {
+    PanelEntryNone,
+    PanelEntryBattery,
+    PanelEntryActiveTime,
+    PanelEntrySteps,
+    PanelEntryHeart
+} PanelEntry;
+
+typedef struct ClaySettings {
+  PanelEntry Entry1;
+  PanelEntry Entry2;
+  PanelEntry Entry3;
+  PanelEntry Entry4;
+} __attribute__((__packed__)) ClaySettings;
+
+void show_mainwindow(ClaySettings *settings);
 void hide_mainwindow(void);
-void set_time_text(char *text);
-void set_date_text(char *text);
-void set_battery_text(char *text);
-void set_activetime_text(char *text);
-void set_steps_text(char *text);
-void set_heart_text(char *text);
+void mainwindow_mark_dirty();
+char *get_time_text();
+char *get_date_text();
+char *get_battery_text();
+char *get_activetime_text();
+char *get_steps_text();
+char *get_heart_text();
