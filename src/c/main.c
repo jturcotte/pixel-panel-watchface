@@ -58,7 +58,7 @@ static void convert_seconds_to_string(int seconds, char *output, size_t length) 
   if (hours >= 10)
     snprintf(output, length, "%dh", hours);
   else if (hours >= 1)
-    snprintf(output, length, "%d:%d", hours, minutes);
+    snprintf(output, length, "%d:%02d", hours, minutes);
   else
     snprintf(output, length, "%dm", minutes);
 }
