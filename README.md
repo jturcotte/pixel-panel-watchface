@@ -1,3 +1,5 @@
 # Pixel Panel Pebble Watchface
 
-https://apps.getpebble.com/en_US/application/5817c2e22044706d47000006
+![Screenshot](emery2.png?raw=true "Screenshot")
+![Screenshot](emery1.png?raw=true "Screenshot")
+![Screenshot](emery3.png?raw=true "Screenshot")
